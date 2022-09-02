@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neural network app wpf", "neural network app wpf.csproj", "{39B94F60-22FE-4DF6-B1B1-5C7409856AEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39B94F60-22FE-4DF6-B1B1-5C7409856AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B94F60-22FE-4DF6-B1B1-5C7409856AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B94F60-22FE-4DF6-B1B1-5C7409856AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B94F60-22FE-4DF6-B1B1-5C7409856AEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD0A25FE-FE07-417C-B984-1A6766E3D01A}
+	EndGlobalSection
+EndGlobal
