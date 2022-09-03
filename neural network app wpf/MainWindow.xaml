@@ -154,7 +154,7 @@
             <TextBlock x:Name="CurrentValues" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBlock x:Name="RemaningValues" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBox PreviewTextInput="numberOfItemsXAML_PreviewTextInput" FontSize="14" Style="{DynamicResource TextBoxStyle1}" x:Name="LengthXAML" Grid.Row="2" Width="200" VerticalAlignment="Center" Padding="10 13" HorizontalAlignment="Right" Margin="10"/>
-            <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Add" Grid.ColumnSpan="2" Grid.Row="3" Width="80" Height="35" HorizontalAlignment="Center" Margin="5" Click="InsertValueAdd"/>
+            <Button IsDefault="True" Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Add" Grid.ColumnSpan="2" Grid.Row="3" Width="80" Height="35" HorizontalAlignment="Center" Margin="5" Click="InsertValueAdd"/>
             <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Back" Grid.Column="1" Grid.Row="4" Width="120" Height="40" HorizontalAlignment="Left" Margin="10" Click="InsertValueBack_click"/>
             <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Next" Grid.Row="4" Width="120" Height="40" HorizontalAlignment="Right" Margin="10" Click="InsertValueNext_click"/>
             <TextBlock x:Name="Alert1" Grid.Row="3" Grid.ColumnSpan="2" Foreground="Red" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
@@ -177,13 +177,15 @@
             <ListView Grid.RowSpan="5" Margin="10" x:Name="ResultListView">
                 <ListView.View>
                     <GridView>
+                        <GridViewColumn Header="Id" Width="40" DisplayMemberBinding="{Binding Id}"/>
                         <GridViewColumn Header="Computer" DisplayMemberBinding="{Binding Computer}"/>
                         <GridViewColumn Header="We" DisplayMemberBinding="{Binding We}"/>
                         <GridViewColumn Header="Compare" DisplayMemberBinding="{Binding Compare}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Content="Stop" Grid.Row="4" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" VerticalAlignment="Bottom" FontSize="16" Click="MainGridStop_click"/>
+            <Button Content="Stop" Grid.Row="4" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" VerticalAlignment="Center" FontSize="16" Click="MainGridStop_click"/>
+            <Button IsDefault="True" Content="Next attempt" Grid.Row="3" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="NextAttempt_click"/>
         </Grid>
     </Grid>
 </Window>

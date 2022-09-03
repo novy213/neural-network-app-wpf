@@ -28,6 +28,8 @@ namespace neural_network_app_wpf
 
         int[] diameter = new int[6];
         int[] length = new int[6];
+        int idWrong = 0;
+        double learningRate = 0.2;
 
         Random r =new Random();
 
@@ -35,14 +37,14 @@ namespace neural_network_app_wpf
         double[] oldWeights = new double[2];
         double mutaion;
         int idWrongCounter = 0;
-        int attempCounter = 2;
+        int attempCounter=1;
 
         public MainWindow()
         {
-            InitializeComponent();
-            mutaion = r.Next(-1000, 1000);
-            weights[0] = r.Next(-1000, 1000);
-            weights[1] = r.Next(-1000, 1000);
+            InitializeComponent();           
+            mutaion = r.Next(-100, 100);
+            weights[0] = r.Next(-100, 100);
+            weights[1] = r.Next(-100, 100);
         }
 
         private void StartButton_click(object sender, RoutedEventArgs e)
@@ -110,37 +112,74 @@ namespace neural_network_app_wpf
                     }
                     if (result[i] > 0 && correctAnswer[i] == 1)
                     {
-                        correct[i] = true;
-                        /*Console.Write(result[i] + " " + "Computer {0}, we {1}", computerThingName[i], thingName[i] + " ");
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine(correct[i]);
-                        Console.ForegroundColor = ConsoleColor.White;*/
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i] });
+                        correct[i] = true;                        
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
                     }
                     else if (result[i] < 0 && correctAnswer[i] == 2)
                     {
-                        correct[i] = true;
-                        /*Console.Write(result[i] + " " + "Computer {0}, we {1}", computerThingName[i], thingName[i] + " ");
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine(correct[i]);
-                        Console.ForegroundColor = ConsoleColor.White;*/
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i] });
+                        correct[i] = true;                      
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
                     }
                     else
                     {
-                        correct[i] = false;
-                        /*Console.Write(result[i] + " " + "Computer {0}, we {1}", computerThingName[i], thingName[i] + " ");
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(correct[i]);
-                        Console.ForegroundColor = ConsoleColor.White;*/
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i] });
+                        correct[i] = false;                        
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
                     }
                 }
+                this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
             }
             else
             {
                 Alert1.Text = "No value was given";
             }
+            attempCounter++;
+        }
+        private void NextAttempt_click(object sender, RoutedEventArgs e)
+        {
+            while (idWrong == 0)
+            {
+                if (correct[idWrongCounter] == false)
+                {
+                    idWrong = idWrongCounter;
+                    break;
+                }
+                idWrongCounter++;
+            }
+            oldWeights[0] = weights[0];
+            oldWeights[1] = weights[1];
+            weights[0] = WeightChange(correctThings[idWrong], diameter[idWrong], learningRate, oldWeights[0]);
+            weights[1] = WeightChange(correctThings[idWrong], length[idWrong], learningRate, oldWeights[1]);
+            for (int i = 0; i < numberOfItems; i++)
+            {
+                result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutaion;
+                if (result[i] > 0)
+                {
+                    computerThingName[i] = "Ring";
+                }
+                else if (result[i] < 0)
+                {
+                    computerThingName[i] = "Pen";
+                }
+                if (result[i] > 0 && correctAnswer[i] == 1)
+                {
+                    correct[i] = true;
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                }
+                else if (result[i] < 0 && correctAnswer[i] == 2)
+                {
+                    correct[i] = true;
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                }
+                else
+                {
+                    correct[i] = false;
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                }
+            }
+            idWrong = 0;
+            idWrongCounter = 0;
+            attempCounter++;
+            this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
         }
 
         private void InsertValueAdd(object sender, RoutedEventArgs e)
@@ -189,15 +228,21 @@ namespace neural_network_app_wpf
         public class MyItem
         {
             public string Computer { get; set; }
-
             public string We { get; set; }
-            public bool Compare { get; set; }
+            public bool? Compare { get; set; }
+            public int? Id { get; set; }
         }
 
         private void MainGridStop_click(object sender, RoutedEventArgs e)
         {
             MainGrid.Visibility = Visibility.Collapsed;
             MenuGrid.Visibility = Visibility.Visible;
+        }
+        
+        public static double WeightChange(int correctThing, double arm, double learningRate, double weigth)
+        {
+            double result = (correctThing * arm * learningRate) + weigth;
+            return result;
         }
     }
 }
