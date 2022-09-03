@@ -174,15 +174,16 @@
                 <RowDefinition Height="100"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <ListView Grid.RowSpan="5" Margin="10">
+            <ListView Grid.RowSpan="5" Margin="10" x:Name="ResultListView">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Computer"/>
-                        <GridViewColumn Header="We"/>
-                        <GridViewColumn Header="Compare"/>
+                        <GridViewColumn Header="Computer" DisplayMemberBinding="{Binding Computer}"/>
+                        <GridViewColumn Header="We" DisplayMemberBinding="{Binding We}"/>
+                        <GridViewColumn Header="Compare" DisplayMemberBinding="{Binding Compare}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
+            <Button Content="Stop" Grid.Row="4" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" VerticalAlignment="Bottom" FontSize="16" Click="MainGridStop_click"/>
         </Grid>
     </Grid>
 </Window>
