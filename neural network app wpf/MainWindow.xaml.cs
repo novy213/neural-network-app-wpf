@@ -5,14 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace neural_network_app_wpf
 {
@@ -21,6 +14,13 @@ namespace neural_network_app_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        int currentValue=0;
+        int remainingValue;
+        int numberOfItems;
+
+        int[] diameter = new int[6];
+        int[] length = new int[6];
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,6 +38,10 @@ namespace neural_network_app_wpf
             {
                 ItemsCountGrid.Visibility = Visibility.Collapsed;
                 InsertValues.Visibility = Visibility.Visible;
+                numberOfItems = int.Parse(numberOfItemsXAML.Text);
+                remainingValue = numberOfItems;
+                CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
+                RemaningValues.Text = "There are " + (remainingValue-currentValue) + " more values ​​left";
             }
             else
             {
@@ -71,6 +75,33 @@ namespace neural_network_app_wpf
         private void InsertValueNext_click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void InsertValueAdd(object sender, RoutedEventArgs e)
+        {
+            if (currentValue != numberOfItems)
+            {
+                if (DiameterXAML.Text.Length>0 && LengthXAML.Text.Length>0)
+                {
+                    diameter[currentValue] = int.Parse(DiameterXAML.Text);
+                    length[currentValue] = int.Parse(LengthXAML.Text);
+
+                    currentValue++;
+                    CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
+                    RemaningValues.Text = "There are " + (remainingValue - currentValue) + " more values ​​left";
+                    LengthXAML.Text = null;
+                    DiameterXAML.Text = null;
+                    Alert1.Text = null;
+                }
+                else
+                {
+                    Alert1.Text = "Please complete all fields";
+                }
+            }
+            else
+            {
+                Alert1.Text = "No more value can be added";
+            }
         }
     }
 }
