@@ -18,6 +18,14 @@ namespace neural_network_app_wpf
         int remainingValue;
         int numberOfItems;
 
+        int[] correctAnswer = new int[6];
+        bool[] correct = new bool[6];
+        double[] result = new double[6];
+        int[] correctThings = new int[6];
+
+        string[] thingName = new string[6];
+        string[] computerThingName = new string[6];
+
         int[] diameter = new int[6];
         int[] length = new int[6];
 
@@ -85,7 +93,24 @@ namespace neural_network_app_wpf
                 {
                     diameter[currentValue] = int.Parse(DiameterXAML.Text);
                     length[currentValue] = int.Parse(LengthXAML.Text);
-
+                    if(length[currentValue] > diameter[currentValue])
+                    {
+                        correctAnswer[currentValue] = 2;
+                    }
+                    else if(length[currentValue] < diameter[currentValue])
+                    {
+                        correctAnswer[currentValue] = 1;
+                    }
+                    if (correctAnswer[currentValue] == 1)
+                    {
+                        thingName[currentValue] = "Ring";
+                        correctThings[currentValue] = 1;
+                    }
+                    else if (correctAnswer[currentValue] == 2)
+                    {
+                        thingName[currentValue] = "Pen";
+                        correctThings[currentValue] = -1;
+                    }
                     currentValue++;
                     CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
                     RemaningValues.Text = "There are " + (remainingValue - currentValue) + " more values ​​left";
