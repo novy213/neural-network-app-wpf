@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace neural_network_app_wpf
@@ -18,16 +19,15 @@ namespace neural_network_app_wpf
         int remainingValue;
         int numberOfItems;
 
-        int[] correctAnswer = new int[6];
-        bool[] correct = new bool[6];
-        double[] result = new double[6];
-        int[] correctThings = new int[6];
+        int[] correctAnswer = new int[100];
+        bool[] correct = new bool[100];
+        double[] result = new double[100];
+        int[] correctThings = new int[100];
+        string[] thingName = new string[100];
+        string[] computerThingName = new string[100];
 
-        string[] thingName = new string[6];
-        string[] computerThingName = new string[6];
-
-        int[] diameter = new int[6];
-        int[] length = new int[6];
+        int[] diameter = new int[100];
+        int[] length = new int[100];
         int idWrong = 0;
         double learningRate = 0.2;
 
@@ -57,12 +57,20 @@ namespace neural_network_app_wpf
         {
             if (numberOfItemsXAML.Text.Length > 0)
             {
-                ItemsCountGrid.Visibility = Visibility.Collapsed;
-                InsertValues.Visibility = Visibility.Visible;
-                numberOfItems = int.Parse(numberOfItemsXAML.Text);
-                remainingValue = numberOfItems;
-                CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
-                RemaningValues.Text = "There are " + (remainingValue-currentValue) + " more values ​​left";
+                if (int.Parse(numberOfItemsXAML.Text) <= 100)
+                {
+                    ItemsCountGrid.Visibility = Visibility.Collapsed;
+                    InsertValues.Visibility = Visibility.Visible;
+                    numberOfItems = int.Parse(numberOfItemsXAML.Text);
+                    remainingValue = numberOfItems;
+                    CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
+                    RemaningValues.Text = "There are " + (remainingValue - currentValue) + " more values ​​left";
+                }
+                else
+                {
+                    Alert.Text = "The maximum number of items is 100";
+                    numberOfItemsXAML.Text = "100";
+                }
             }
             else
             {
@@ -78,7 +86,7 @@ namespace neural_network_app_wpf
         }
         private static readonly Regex _regex = new Regex("[^0-9.-]+"); 
         private static bool IsTextAllowed(string text)
-        {
+        {  
             return !_regex.IsMatch(text);
         }
 
@@ -114,16 +122,19 @@ namespace neural_network_app_wpf
                     {
                         correct[i] = true;                        
                         this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
                     }
                     else if (result[i] < 0 && correctAnswer[i] == 2)
                     {
                         correct[i] = true;                      
                         this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
                     }
                     else
                     {
                         correct[i] = false;                        
                         this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
                     }
                 }
                 this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
@@ -135,7 +146,8 @@ namespace neural_network_app_wpf
             attempCounter++;
         }
         private void NextAttempt_click(object sender, RoutedEventArgs e)
-        {
+        {       
+            CurrentAttempt.Items.Clear();
             while (idWrong == 0)
             {
                 if (correct[idWrongCounter] == false)
@@ -163,17 +175,20 @@ namespace neural_network_app_wpf
                 if (result[i] > 0 && correctAnswer[i] == 1)
                 {
                     correct[i] = true;
-                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });                    
+                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
                 }
                 else if (result[i] < 0 && correctAnswer[i] == 2)
                 {
                     correct[i] = true;
                     this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
                 }
                 else
                 {
                     correct[i] = false;
                     this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
                 }
             }
             idWrong = 0;
@@ -188,32 +203,39 @@ namespace neural_network_app_wpf
             {
                 if (DiameterXAML.Text.Length>0 && LengthXAML.Text.Length>0)
                 {
-                    diameter[currentValue] = int.Parse(DiameterXAML.Text);
-                    length[currentValue] = int.Parse(LengthXAML.Text);
-                    if(length[currentValue] > diameter[currentValue])
+                    if (DiameterXAML.Text != LengthXAML.Text)
                     {
-                        correctAnswer[currentValue] = 2;
+                        diameter[currentValue] = int.Parse(DiameterXAML.Text);
+                        length[currentValue] = int.Parse(LengthXAML.Text);
+                        if (length[currentValue] > diameter[currentValue])
+                        {
+                            correctAnswer[currentValue] = 2;
+                        }
+                        else if (length[currentValue] < diameter[currentValue])
+                        {
+                            correctAnswer[currentValue] = 1;
+                        }
+                        if (correctAnswer[currentValue] == 1)
+                        {
+                            thingName[currentValue] = "Ring";
+                            correctThings[currentValue] = 1;
+                        }
+                        else if (correctAnswer[currentValue] == 2)
+                        {
+                            thingName[currentValue] = "Pen";
+                            correctThings[currentValue] = -1;
+                        }
+                        currentValue++;
+                        CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
+                        RemaningValues.Text = "There are " + (remainingValue - currentValue) + " more values ​​left";
+                        LengthXAML.Text = null;
+                        DiameterXAML.Text = null;
+                        Alert1.Text = null;
                     }
-                    else if(length[currentValue] < diameter[currentValue])
+                    else
                     {
-                        correctAnswer[currentValue] = 1;
+                        Alert1.Text = "These values ​​cannot be the same";
                     }
-                    if (correctAnswer[currentValue] == 1)
-                    {
-                        thingName[currentValue] = "Ring";
-                        correctThings[currentValue] = 1;
-                    }
-                    else if (correctAnswer[currentValue] == 2)
-                    {
-                        thingName[currentValue] = "Pen";
-                        correctThings[currentValue] = -1;
-                    }
-                    currentValue++;
-                    CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
-                    RemaningValues.Text = "There are " + (remainingValue - currentValue) + " more values ​​left";
-                    LengthXAML.Text = null;
-                    DiameterXAML.Text = null;
-                    Alert1.Text = null;
                 }
                 else
                 {
@@ -237,12 +259,29 @@ namespace neural_network_app_wpf
         {
             MainGrid.Visibility = Visibility.Collapsed;
             MenuGrid.Visibility = Visibility.Visible;
+            mutaion = r.Next(-100, 100);
+            weights[0] = r.Next(-100, 100);
+            weights[1] = r.Next(-100, 100);
+            correctAnswer = new int[100];
+            correct = new bool[100];
+            result = new double[100];
+            correctThings = new int[100];
+            thingName = new string[100];
+            computerThingName = new string[100];
+            diameter = new int[100];
+            length = new int[100];
+
         }
         
         public static double WeightChange(int correctThing, double arm, double learningRate, double weigth)
         {
             double result = (correctThing * arm * learningRate) + weigth;
             return result;
+        }
+
+        private void Skip_click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
