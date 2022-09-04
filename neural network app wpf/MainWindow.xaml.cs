@@ -38,6 +38,7 @@ namespace neural_network_app_wpf
         double mutaion;
         int idWrongCounter = 0;
         int attempCounter=1;
+        int skipAttempCounter=1;
 
         public MainWindow()
         {
@@ -121,22 +122,22 @@ namespace neural_network_app_wpf
                     if (result[i] > 0 && correctAnswer[i] == 1)
                     {
                         correct[i] = true;                        
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                     }
                     else if (result[i] < 0 && correctAnswer[i] == 2)
                     {
                         correct[i] = true;                      
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                     }
                     else
                     {
                         correct[i] = false;                        
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter});
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                     }
-                }
+                }                
                 this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
             }
             else
@@ -157,6 +158,10 @@ namespace neural_network_app_wpf
                 }
                 idWrongCounter++;
             }
+            if(idWrong == numberOfItems)
+            {
+                Skip.Text = "All items are known in the " + skipAttempCounter + " attempt";
+            }
             oldWeights[0] = weights[0];
             oldWeights[1] = weights[1];
             weights[0] = WeightChange(correctThings[idWrong], diameter[idWrong], learningRate, oldWeights[0]);
@@ -175,25 +180,29 @@ namespace neural_network_app_wpf
                 if (result[i] > 0 && correctAnswer[i] == 1)
                 {
                     correct[i] = true;
-                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });                    
-                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });                    
+                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                 }
                 else if (result[i] < 0 && correctAnswer[i] == 2)
                 {
                     correct[i] = true;
-                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
-                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                 }
                 else
                 {
                     correct[i] = false;
-                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
-                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter });
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                    this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                 }
             }
-            idWrong = 0;
-            idWrongCounter = 0;
+            if (idWrong != numberOfItems)
+            {
+                skipAttempCounter=attempCounter;
+            }
             attempCounter++;
+            idWrong = 0;
+            idWrongCounter = 0;            
             this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
         }
 
@@ -253,6 +262,8 @@ namespace neural_network_app_wpf
             public string We { get; set; }
             public bool? Compare { get; set; }
             public int? Id { get; set; }
+            public int? Diameter { get; set; }
+            public int? Length { get; set; }
         }
 
         private void MainGridStop_click(object sender, RoutedEventArgs e)
@@ -270,7 +281,19 @@ namespace neural_network_app_wpf
             computerThingName = new string[100];
             diameter = new int[100];
             length = new int[100];
-
+            numberOfItemsXAML.Text = null;
+            LengthXAML.Text = null;
+            DiameterXAML.Text = null;
+            currentValue = 0;
+            remainingValue=0;
+            numberOfItems=0;
+            Alert.Text = null;
+            Alert1.Text = null;
+            Skip.Text = null;
+            CurrentAttempt.Items.Clear();
+            ResultListView.Items.Clear();
+            attempCounter = 1;
+            skipAttempCounter = 1;
         }
         
         public static double WeightChange(int correctThing, double arm, double learningRate, double weigth)
