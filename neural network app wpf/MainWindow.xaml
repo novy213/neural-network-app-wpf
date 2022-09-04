@@ -179,7 +179,7 @@
                     <GridView>
                         <GridViewColumn Header="Id" Width="40" DisplayMemberBinding="{Binding Id}"/>
                         <GridViewColumn Header="Computer" DisplayMemberBinding="{Binding Computer}"/>
-                        <GridViewColumn Header="We" DisplayMemberBinding="{Binding We}"/>
+                        <GridViewColumn Header="We" Width="50" DisplayMemberBinding="{Binding We}"/>
                         <GridViewColumn Header="Compare">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -217,7 +217,7 @@
                     <GridView>
                         <GridViewColumn Header="Id" Width="40" DisplayMemberBinding="{Binding Id}"/>
                         <GridViewColumn Header="Computer" DisplayMemberBinding="{Binding Computer}"/>
-                        <GridViewColumn Header="We" DisplayMemberBinding="{Binding We}"/>
+                        <GridViewColumn Header="We" Width="50" DisplayMemberBinding="{Binding We}"/>
                         <GridViewColumn Header="Compare">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
