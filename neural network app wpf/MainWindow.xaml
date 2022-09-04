@@ -119,7 +119,7 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="A.I neural network app" FontSize="50" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial Rounded MT Bold"/>
-            <Button Background="#F5D6A6" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Start!" Grid.Row="1" Width="120" Height="40" Grid.ColumnSpan="2" Click="StartButton_click"/>
+            <Button IsDefault="True" Background="#F5D6A6" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Start!" Grid.Row="1" Width="120" Height="40" Grid.ColumnSpan="2" Click="StartButton_click"/>
         </Grid>
         <Grid x:Name="ItemsCountGrid" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -135,7 +135,7 @@
             <TextBox FontSize="16" Style="{DynamicResource TextBoxStyle1}" x:Name="numberOfItemsXAML" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2" Width="200" Padding="10 13" PreviewTextInput="numberOfItemsXAML_PreviewTextInput"/>
             <TextBlock x:Name="Alert" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Back" Grid.Column="1" Grid.Row="3" Width="120" Height="40" HorizontalAlignment="Left" Margin="10" Click="CancelNumberFiels_click"/>
-            <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Next" Grid.Row="3" Width="120" Height="40" HorizontalAlignment="Right" Margin="10" Click="NextNumberFiles_click"/>
+            <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Next" Grid.Row="3" Width="120" Height="40" HorizontalAlignment="Right" Margin="10" IsDefault="True" Click="NextNumberFiles_click"/>
         </Grid>
         <Grid x:Name="InsertValues" Visibility="Collapsed">
             <Grid.RowDefinitions>

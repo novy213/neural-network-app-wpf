@@ -53,6 +53,7 @@ namespace neural_network_app_wpf
         {
             MenuGrid.Visibility = Visibility.Collapsed;
             ItemsCountGrid.Visibility = Visibility.Visible;
+            numberOfItemsXAML.Focus();
         }
 
         private void NextNumberFiles_click(object sender, RoutedEventArgs e)
@@ -60,13 +61,14 @@ namespace neural_network_app_wpf
             if (numberOfItemsXAML.Text.Length > 0)
             {
                 if (int.Parse(numberOfItemsXAML.Text) <= 100)
-                {
+                {                    
                     ItemsCountGrid.Visibility = Visibility.Collapsed;
                     InsertValues.Visibility = Visibility.Visible;
                     numberOfItems = int.Parse(numberOfItemsXAML.Text);
                     remainingValue = numberOfItems;
                     CurrentValues.Text = "Currently " + currentValue + " values ​​have been taken";
                     RemaningValues.Text = "There are " + (remainingValue - currentValue) + " more values ​​left";
+                    DiameterXAML.Focus();
                 }
                 else
                 {
@@ -263,6 +265,7 @@ namespace neural_network_app_wpf
                     {
                         Alert1.Text = "These values ​​cannot be the same";
                     }
+                    DiameterXAML.Focus();
                 }
                 else
                 {
