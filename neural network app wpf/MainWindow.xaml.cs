@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace neural_network_app_wpf
 {
@@ -26,6 +27,7 @@ namespace neural_network_app_wpf
         string[] thingName = new string[100];
         string[] computerThingName = new string[100];
         bool allCorrect = false;
+        int correctCounter = 0;
 
         int[] diameter = new int[100];
         int[] length = new int[100];
@@ -36,15 +38,15 @@ namespace neural_network_app_wpf
 
         double[] weights = new double[2];
         double[] oldWeights = new double[2];
-        double mutaion;
+        double mutation;
         int idWrongCounter = 0;
         int attempCounter=1;
         int skipAttempCounter=1;
 
         public MainWindow()
         {
-            InitializeComponent();           
-            mutaion = r.Next(-100, 100);
+            InitializeComponent();
+            mutation = r.Next(-100, 100);
             weights[0] = r.Next(-100, 100);
             weights[1] = r.Next(-100, 100);
         }
@@ -113,7 +115,7 @@ namespace neural_network_app_wpf
                 MainGrid.Visibility = Visibility.Visible;                
                 for (int i = 0; i < numberOfItems; i++)
                 {
-                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutaion;
+                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutation;
                     if (result[i] > 0)
                     {
                         computerThingName[i] = "Ring";
@@ -155,9 +157,7 @@ namespace neural_network_app_wpf
                 {
                     allCorrect = true;
                     Skip.Text = "All items are known in the " + skipAttempCounter + " attempt";
-                }
-                idWrong = 0;
-                idWrongCounter = 0;
+                }               
             }
             else
             {
@@ -166,29 +166,27 @@ namespace neural_network_app_wpf
             attempCounter++;
         }
         private void NextAttempt_click(object sender, RoutedEventArgs e)
-        {       
-            CurrentAttempt.Items.Clear();
+        {
             while (idWrong == 0)
             {
-                if (correct[idWrongCounter] == false)
+                if (correct[idWrongCounter] == true)
+                {
+                    idWrongCounter++;                                       
+                }
+                else if(correct[idWrongCounter] == false)
                 {
                     idWrong = idWrongCounter;
                     break;
-                }
-                idWrongCounter++;
-            }
-            if(idWrong == numberOfItems)
-            {
-                allCorrect = true;
-                Skip.Text = "All items are known in the " + skipAttempCounter + " attempt";
-            }
+                }                
+            }            
+            CurrentAttempt.Items.Clear();
             oldWeights[0] = weights[0];
             oldWeights[1] = weights[1];
             weights[0] = WeightChange(correctThings[idWrong], diameter[idWrong], learningRate, oldWeights[0]);
             weights[1] = WeightChange(correctThings[idWrong], length[idWrong], learningRate, oldWeights[1]);
             for (int i = 0; i < numberOfItems; i++)
             {
-                result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutaion;
+                result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutation;
                 if (result[i] > 0)
                 {
                     computerThingName[i] = "Ring";
@@ -200,7 +198,7 @@ namespace neural_network_app_wpf
                 if (result[i] > 0 && correctAnswer[i] == 1)
                 {
                     correct[i] = true;
-                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });                    
+                    this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                     this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                 }
                 else if (result[i] < 0 && correctAnswer[i] == 2)
@@ -215,14 +213,27 @@ namespace neural_network_app_wpf
                     this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                     this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
                 }
-            }
+            }            
             if (idWrong != numberOfItems)
             {
-                skipAttempCounter=attempCounter;
+                skipAttempCounter = attempCounter;
+            }
+            for (int i = 0; i < correct.Length; i++)
+            {
+                if (correct[i])
+                {
+                    correctCounter++;
+                }
+            }
+            if (correctCounter == numberOfItems)
+            {
+                allCorrect = true;
+                Skip.Text = "All items are known in the " + skipAttempCounter + " attempt";
             }
             attempCounter++;
             idWrong = 0;
-            idWrongCounter = 0;            
+            idWrongCounter = 0;
+            correctCounter = 0;
             this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
         }
 
@@ -291,7 +302,7 @@ namespace neural_network_app_wpf
         {
             MainGrid.Visibility = Visibility.Collapsed;
             MenuGrid.Visibility = Visibility.Visible;
-            mutaion = r.Next(-100, 100);
+            mutation = r.Next(-100, 100);
             weights[0] = r.Next(-100, 100);
             weights[1] = r.Next(-100, 100);
             correctAnswer = new int[100];
@@ -352,7 +363,7 @@ namespace neural_network_app_wpf
                 weights[1] = WeightChange(correctThings[idWrong], length[idWrong], learningRate, oldWeights[1]);
                 for (int i = 0; i < numberOfItems; i++)
                 {
-                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutaion;
+                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutation;
                     if (result[i] > 0)
                     {
                         computerThingName[i] = "Ring";
@@ -389,6 +400,12 @@ namespace neural_network_app_wpf
                 idWrongCounter = 0;
                 this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
             } while (!allCorrect);
+        }
+        float Neuron(float diameter, float length, float mutation, float weight1, float weight2)
+        {
+            float result;
+            result = ((diameter * weight1) + (length * weight2)) + mutation;
+            return result;
         }
     }
 }
