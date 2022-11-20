@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:neural_network_app_wpf"
         mc:Ignorable="d"
+        x:Name="Window"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <Style x:Key="FocusVisual">
@@ -276,7 +277,28 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Id" Width="40" DisplayMemberBinding="{Binding Id}"/>
-                        <GridViewColumn Header="Correct" Width="40" DisplayMemberBinding="{Binding Correct}"/>
+                        <GridViewColumn Header="Correct" Width="70">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Correct}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Correct}" Value="True">
+                                                        <Setter Property="Foreground" Value="Green" />
+                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Correct}" Value="False">
+                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                        <Setter Property="Foreground" Value="Red" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -314,7 +336,8 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Content="Next" Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click"/>
+            <Button Content="Next" Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click" MouseDown="Button_MouseDown"/>
+            <TextBlock x:Name="test" Grid.Column="1"/>
         </Grid>
     </Grid>
 </Window>

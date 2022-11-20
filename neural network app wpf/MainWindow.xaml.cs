@@ -414,7 +414,14 @@ namespace neural_network_app_wpf
                         idWrong = idWrongCounter;
                         break;
                     }
-                }              
+                }
+                for (int i = 0; i < correct.Length; i++)
+                {
+                    if (correct[i])
+                    {
+                        correctCounter++;
+                    }
+                }
                 oldWeights[0] = weights[0];
                 oldWeights[1] = weights[1];
                 weights[0] = WeightChange(correctThings[idWrong], diameter[idWrong], learningRate, oldWeights[0]);
@@ -543,7 +550,7 @@ namespace neural_network_app_wpf
             }
             attempCounter++;
         }
-
+        int clickCounter=0;
         private void MultiNeurons_click(object sender, RoutedEventArgs e)
         {
             numberOfNeurons.Visibility = Visibility.Visible;
@@ -559,18 +566,21 @@ namespace neural_network_app_wpf
             for (int i = 0; i < NumberOfNeurons; i++)
             {
                 neurons[i] = new Neuron(diameter, length,numberOfItems,thingName,correctThings,correctAnswer);
-                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i+1 });                              
                 neurons[i].NextAttempt();
+                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i+1 });                                              
             }
             NeuronSelect.Visibility = Visibility.Collapsed;
             MultiNeuronsGrid.Visibility=Visibility.Visible;
         }
         bool afterButton = false;
+        int a;
         private void MultiNeuronNext_click(object sender, RoutedEventArgs e)
-        {
-            attempCounter++;
+        {            
+            b = a;
+            clickCounter++;
             afterButton = true;
-            NeuronsList.Items.Clear();
+            FocusManager.SetFocusedElement(Window, (IInputElement)NeuronsList);
+            NeuronsList.Items.Clear();            
             for (int i = 0; i < NumberOfNeurons; i++)
             {
                 neurons[i].NextAttempt();
@@ -581,17 +591,17 @@ namespace neural_network_app_wpf
         private void NeuronsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView btn = (ListView)sender;
-            int a = btn.SelectedIndex;
-            if (afterButton)
-            {               
-                SelectedNeuronAttemp.ItemsSource = neurons[a + b + 1].neuronList;                
-                afterButton = false;
-            }
-            else
+            a = btn.SelectedIndex;
+            SelectedNeuronAttemp.ItemsSource = neurons[b].neuronList;
+            test.Text = a.ToString();
+        }
+
+        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount > 1)
             {
-                SelectedNeuronAttemp.ItemsSource = neurons[a].neuronList;
-                b = a;
+                clickCounter += 2;
             }
-        }                
+        }
     }
 }
