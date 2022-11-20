@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace neural_network_app_wpf
 {
@@ -22,6 +20,7 @@ namespace neural_network_app_wpf
 
         int[] correctAnswer = new int[100];
         bool[] correct = new bool[100];
+        int NumberOfNeurons = 10;
         double[] result = new double[100];
         int[] correctThings = new int[100];
         string[] thingName = new string[100];
@@ -32,9 +31,9 @@ namespace neural_network_app_wpf
         int[] diameter = new int[100];
         int[] length = new int[100];
         int idWrong = 0;
-        double learningRate = 0.2;
-
-        Random r =new Random();
+        double learningRate = 0.2;       
+       
+        Random r = new Random((int)DateTime.Now.Ticks);
 
         double[] weights = new double[2];
         double[] oldWeights = new double[2];
@@ -48,7 +47,7 @@ namespace neural_network_app_wpf
             InitializeComponent();
             mutation = r.Next(-100, 100);
             weights[0] = r.Next(-100, 100);
-            weights[1] = r.Next(-100, 100);
+            weights[1] = r.Next(-100, 100);          
         }
 
         private void StartButton_click(object sender, RoutedEventArgs e)
@@ -109,61 +108,8 @@ namespace neural_network_app_wpf
 
         private void InsertValueNext_click(object sender, RoutedEventArgs e)
         {
-            if (currentValue == numberOfItems)
-            {
-                InsertValues.Visibility = Visibility.Collapsed;
-                MainGrid.Visibility = Visibility.Visible;                
-                for (int i = 0; i < numberOfItems; i++)
-                {
-                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutation;
-                    if (result[i] > 0)
-                    {
-                        computerThingName[i] = "Ring";
-                    }
-                    else if (result[i] < 0)
-                    {
-                        computerThingName[i] = "Pen";
-                    }
-                    if (result[i] > 0 && correctAnswer[i] == 1)
-                    {
-                        correct[i] = true;                        
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                    }
-                    else if (result[i] < 0 && correctAnswer[i] == 2)
-                    {
-                        correct[i] = true;                      
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                    }
-                    else
-                    {
-                        correct[i] = false;                        
-                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                    }
-                }                
-                this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
-                while (idWrong == 0)
-                {
-                    if (correct[idWrongCounter] == false)
-                    {
-                        idWrong = idWrongCounter;
-                        break;
-                    }
-                    idWrongCounter++;
-                }
-                if (idWrong == numberOfItems)
-                {
-                    allCorrect = true;
-                    Skip.Text = "All items are known in the " + skipAttempCounter + " attempt";
-                }               
-            }
-            else
-            {
-                Alert1.Text = "No value was given";
-            }
-            attempCounter++;
+            InsertValues.Visibility = Visibility.Collapsed;
+            NeuronSelect.Visibility = Visibility.Visible;
         }
         private void NextAttempt_click(object sender, RoutedEventArgs e)
         {
@@ -296,6 +242,7 @@ namespace neural_network_app_wpf
             public int? Id { get; set; }
             public int? Diameter { get; set; }
             public int? Length { get; set; }
+            public double? Weigth { get; set; }
         }
 
         private void MainGridStop_click(object sender, RoutedEventArgs e)
@@ -386,9 +333,9 @@ namespace neural_network_app_wpf
                     }
                     else
                     {
-                        correct[i] = false;
+                        correct[i] = false;                                                             
                         this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
-                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });                        
                     }
                 }
                 if (idWrong != numberOfItems)
@@ -401,11 +348,260 @@ namespace neural_network_app_wpf
                 this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
             } while (!allCorrect);
         }
-        float Neuron(float diameter, float length, float mutation, float weight1, float weight2)
+
+
+        public class Neuron
         {
-            float result;
-            result = ((diameter * weight1) + (length * weight2)) + mutation;
-            return result;
+            public List<MyItem> neuronList = new List<MyItem>();
+            public bool neuronCorrect;
+
+            public int numberOfItems;           
+
+            public int[] correctAnswer = new int[100];
+            public bool[] correct = new bool[100];
+            public int NumberOfNeurons = 10;
+            public double[] result = new double[100];
+            public int[] correctThings = new int[100];
+            public string[] thingName = new string[100];
+            public string[] computerThingName = new string[100];
+            public bool allCorrect = false;
+            public int correctCounter = 0;
+
+            public int[] diameter = new int[100];
+            public int[] length = new int[100];
+            public int idWrong = 0;
+            public double learningRate = 0.2;
+
+            public Random r = new Random();
+
+            public double[] weights = new double[2];
+            public double[] oldWeights = new double[2];
+            public double mutation;
+            public int idWrongCounter = 0;
+            public int attempCounter = 1;
+            public int skipAttempCounter = 1;
+
+            public Neuron(int[] diameter, int[] length, int numberOfItems, string[] thingName, int[] correctThing, int[] correctAnswer)
+            {           
+                this.numberOfItems = numberOfItems;
+                for (int i = 0; i < numberOfItems; i++)
+                {
+                    this.diameter[i] = diameter[i];
+                    this.correctThings[i] = correctThing[i];
+                    this.length[i] = length[i];
+                    this.correctAnswer[i] = correctAnswer[i];
+                    this.thingName[i] = thingName[i];                    
+                }
+                mutation = r.Next(-100, 100);
+                Thread.Sleep(10);
+                weights[0] = r.Next(-100, 100);
+                Thread.Sleep(10);
+                weights[1] = r.Next(-100, 100);
+                neuronCorrect = false;
+                
+            }            
+
+            public void NextAttempt()
+            {                
+                while (idWrong == 0)
+                {
+                    if (correct[idWrongCounter] == true)
+                    {
+                        idWrongCounter++;
+                    }
+                    else if (correct[idWrongCounter] == false)
+                    {
+                        idWrong = idWrongCounter;
+                        break;
+                    }
+                }
+                for (int i = 0; i < correct.Length; i++)
+                {
+                    if (correct[i])
+                    {
+                        correctCounter++;
+                    }
+                }
+                oldWeights[0] = weights[0];
+                oldWeights[1] = weights[1];
+                weights[0] = WeightChange(correctThings[idWrong], diameter[idWrong], learningRate, oldWeights[0]);
+                weights[1] = WeightChange(correctThings[idWrong], length[idWrong], learningRate, oldWeights[1]);
+                for (int i = 0; i < numberOfItems; i++)
+                {
+                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutation;
+                    if (result[i] > 0)
+                    {
+                        computerThingName[i] = "Ring";
+                    }
+                    else if (result[i] < 0)
+                    {
+                        computerThingName[i] = "Pen";
+                    }
+                    if (result[i] > 0 && correctAnswer[i] == 1)
+                    {
+                        correct[i] = true;
+                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i], Weigth = weights[1] });
+                    }
+                    else if (result[i] < 0 && correctAnswer[i] == 2)
+                    {
+                        correct[i] = true;
+                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i], Weigth = weights[1] });
+                    }
+                    else
+                    {
+                        correct[i] = false;
+                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i], Weigth = weights[1] });
+                    }                    
+                }
+                this.neuronList.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null, Length = null, Diameter = null, Weigth = null });
+                if (idWrong != numberOfItems)
+                {
+                    skipAttempCounter = attempCounter;
+                }
+                for (int i = 0; i < correct.Length; i++)
+                {
+                    if (correct[i])
+                    {
+                        correctCounter++;
+                    }
+                }
+                if (correctCounter == numberOfItems)
+                {
+                    allCorrect = true;                    
+                }
+                if (allCorrect)
+                {
+                    neuronCorrect = true;                                     
+                }
+                attempCounter++;
+                idWrong = 0;
+                idWrongCounter = 0;
+                correctCounter = 0;
+            }           
+        }
+        Neuron[] neurons = new Neuron[99];
+        public void Random(Neuron neuron)
+        {
+            neuron.mutation = r.Next(-100, 100);
+            neuron.weights[0] = r.Next(-100, 100);
+            neuron.weights[1] = r.Next(-100, 100);
+        }
+        public class NeuronList
+        {
+            public int Id { get; set; }
+            public bool Correct { get; set; }
+        }
+        
+        private void SingleNeuron_click(object sender, RoutedEventArgs e)
+        {
+            if (currentValue == numberOfItems)
+            {
+                NeuronSelect.Visibility = Visibility.Collapsed;
+                MainGrid.Visibility = Visibility.Visible;
+                for (int i = 0; i < numberOfItems; i++)
+                {
+                    result[i] = ((diameter[i] * weights[0]) + (length[i] * weights[1])) + mutation;
+                    if (result[i] > 0)
+                    {
+                        computerThingName[i] = "Ring";
+                    }
+                    else if (result[i] < 0)
+                    {
+                        computerThingName[i] = "Pen";
+                    }
+                    if (result[i] > 0 && correctAnswer[i] == 1)
+                    {
+                        correct[i] = true;
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                    }
+                    else if (result[i] < 0 && correctAnswer[i] == 2)
+                    {
+                        correct[i] = true;
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                    }
+                    else
+                    {
+                        correct[i] = false;
+                        this.ResultListView.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                        this.CurrentAttempt.Items.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i] });
+                    }
+                }
+                this.ResultListView.Items.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null });
+                while (idWrong == 0)
+                {
+                    if (correct[idWrongCounter] == false)
+                    {
+                        idWrong = idWrongCounter;
+                        break;
+                    }
+                    idWrongCounter++;
+                }
+                if (idWrong == numberOfItems)
+                {
+                    allCorrect = true;
+                    Skip.Text = "All items are known in the " + skipAttempCounter + " attempt";
+                }
+            }
+            else
+            {
+                Alert1.Text = "No value was given";
+            }
+            attempCounter++;
+        }
+        int clickCounter=0;
+        private void MultiNeurons_click(object sender, RoutedEventArgs e)
+        {
+            numberOfNeurons.Visibility = Visibility.Visible;
+            ApplyNumberOfNeurons.Visibility = Visibility.Visible;
+            numberOfNeurons.Text = NumberOfNeurons.ToString();
+            numberOfNeurons.Focus();
+            numberOfNeurons.SelectAll();
+        }
+
+        private void ApplyNumberOfNeurons_Click(object sender, RoutedEventArgs e)
+        {
+            NumberOfNeurons = int.Parse(numberOfNeurons.Text);
+            for (int i = 0; i < NumberOfNeurons; i++)
+            {
+                neurons[i] = new Neuron(diameter, length,numberOfItems,thingName,correctThings,correctAnswer);
+                neurons[i].NextAttempt();
+                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i+1 });                                              
+            }
+            NeuronSelect.Visibility = Visibility.Collapsed;
+            MultiNeuronsGrid.Visibility=Visibility.Visible;
+        }
+        bool afterButton = false;
+        int a;
+        private void MultiNeuronNext_click(object sender, RoutedEventArgs e)
+        {            
+            b = a;
+            clickCounter++;
+            afterButton = true;
+            FocusManager.SetFocusedElement(Window, (IInputElement)NeuronsList);
+            NeuronsList.Items.Clear();            
+            for (int i = 0; i < NumberOfNeurons; i++)
+            {
+                neurons[i].NextAttempt();
+                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1 });
+            }
+        }
+        int b;        
+        private void NeuronsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListView btn = (ListView)sender;
+            a = btn.SelectedIndex;
+            SelectedNeuronAttemp.ItemsSource = neurons[b].neuronList;
+            test.Text = a.ToString();
+        }
+
+        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount > 1)
+            {
+                clickCounter += 2;
+            }
         }
     }
 }
