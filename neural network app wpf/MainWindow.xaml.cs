@@ -576,14 +576,24 @@ namespace neural_network_app_wpf
         private void ApplyNumberOfNeurons_Click(object sender, RoutedEventArgs e)
         {
             NumberOfNeurons = int.Parse(numberOfNeurons.Text);
-            for (int i = 0; i < NumberOfNeurons; i++)
+            if (NumberOfNeurons > 100)
             {
-                neurons[i] = new Neuron(diameter, length,numberOfItems,thingName,correctThings,correctAnswer);
-                neurons[i].NextAttempt();
-                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i+1, IdCorrect = neurons[i].skipAttempCounter });                                              
+                Alert3.Text = "The maximum number of neurons is 100";
+                numberOfNeurons.Text = "100";
+                numberOfNeurons.Focus();
+                numberOfNeurons.SelectAll();
             }
-            NeuronSelect.Visibility = Visibility.Collapsed;
-            MultiNeuronsGrid.Visibility=Visibility.Visible;
+            else
+            {
+                for (int i = 0; i < NumberOfNeurons; i++)
+                {
+                    neurons[i] = new Neuron(diameter, length, numberOfItems, thingName, correctThings, correctAnswer);
+                    neurons[i].NextAttempt();
+                    NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1, IdCorrect = neurons[i].skipAttempCounter });
+                }
+                NeuronSelect.Visibility = Visibility.Collapsed;
+                MultiNeuronsGrid.Visibility = Visibility.Visible;
+            }
         }      
         private void MultiNeuronNext_click(object sender, RoutedEventArgs e)
         {                      
