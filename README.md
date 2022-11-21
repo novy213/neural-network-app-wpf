@@ -4,4 +4,4 @@ A.I is learning, after a certain amount of attemps, the application will never b
 The application runs on a perceptron neural network and using one neutron. <br>
 The same project as <a href="https://github.com/novy213/neural-newtork-app">neural-newtork-app<a/> but made in WPF.<br>
 <b>All working</b>:white_check_mark:<br>
-  Currently working on <b>info feature, second neuron</b>
+  Currently working on <b>info feature</b>
