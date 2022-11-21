@@ -13,7 +13,7 @@ namespace neural_network_app_wpf
     /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
+    {       
         int currentValue=0;
         int remainingValue;
         int numberOfItems;
@@ -41,6 +41,11 @@ namespace neural_network_app_wpf
         int idWrongCounter = 0;
         int attempCounter=1;
         int skipAttempCounter=1;
+
+
+        bool MultiNeuronsCorrect = false;
+        Neuron[] neurons = new Neuron[100];
+        int b;
 
         public MainWindow()
         {
@@ -108,8 +113,15 @@ namespace neural_network_app_wpf
 
         private void InsertValueNext_click(object sender, RoutedEventArgs e)
         {
-            InsertValues.Visibility = Visibility.Collapsed;
-            NeuronSelect.Visibility = Visibility.Visible;
+            if (remainingValue - currentValue != 0)
+            {
+                Alert1.Text = "Insert all items";
+            }
+            else
+            {
+                InsertValues.Visibility = Visibility.Collapsed;
+                NeuronSelect.Visibility = Visibility.Visible;
+            }
         }
         private void NextAttempt_click(object sender, RoutedEventArgs e)
         {
@@ -241,8 +253,7 @@ namespace neural_network_app_wpf
             public bool? Compare { get; set; }
             public int? Id { get; set; }
             public int? Diameter { get; set; }
-            public int? Length { get; set; }
-            public double? Weigth { get; set; }
+            public int? Length { get; set; }        
         }
 
         private void MainGridStop_click(object sender, RoutedEventArgs e)
@@ -253,6 +264,7 @@ namespace neural_network_app_wpf
             numberOfNeurons.Visibility = Visibility.Collapsed;
             ApplyNumberOfNeurons.Visibility = Visibility.Collapsed;
             NeuronsList.Items.Clear();
+            SelectedNeuronAttemp.Items.Clear();
             mutation = r.Next(-100, 100);
             weights[0] = r.Next(-100, 100);
             weights[1] = r.Next(-100, 100);
@@ -279,7 +291,7 @@ namespace neural_network_app_wpf
             skipAttempCounter = 1;
             allCorrect = false;
             idWrong = 0;
-            idWrongCounter = 0;
+            idWrongCounter = 0;            
             for(int i = 0; i < 99;i++)
             {
                 neurons[i] = null;
@@ -387,7 +399,7 @@ namespace neural_network_app_wpf
             public double mutation;
             public int idWrongCounter = 0;
             public int attempCounter = 1;
-            public int skipAttempCounter = 1;
+            public int skipAttempCounter;
 
             public Neuron(int[] diameter, int[] length, int numberOfItems, string[] thingName, int[] correctThing, int[] correctAnswer)
             {           
@@ -441,20 +453,20 @@ namespace neural_network_app_wpf
                     if (result[i] > 0 && correctAnswer[i] == 1)
                     {
                         correct[i] = true;
-                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i], Weigth = weights[1] });
+                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i]});
                     }
                     else if (result[i] < 0 && correctAnswer[i] == 2)
                     {
                         correct[i] = true;
-                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i], Weigth = weights[1] });
+                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i]});
                     }
                     else
                     {
                         correct[i] = false;
-                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i], Weigth = weights[1] });
+                        this.neuronList.Add(new MyItem { Computer = computerThingName[i], We = thingName[i], Compare = correct[i], Id = attempCounter, Diameter = diameter[i], Length = length[i]});
                     }                    
                 }
-                this.neuronList.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null, Length = null, Diameter = null, Weigth = null });
+                this.neuronList.Add(new MyItem { Computer = null, We = null, Compare = null, Id = null, Length = null, Diameter = null});
                 if (idWrong != numberOfItems)
                 {
                     skipAttempCounter = attempCounter;
@@ -472,7 +484,7 @@ namespace neural_network_app_wpf
                 }
                 if (allCorrect)
                 {
-                    neuronCorrect = true;                                     
+                    neuronCorrect = true;                      
                 }
                 attempCounter++;
                 idWrong = 0;
@@ -480,7 +492,6 @@ namespace neural_network_app_wpf
                 correctCounter = 0;
             }           
         }
-        Neuron[] neurons = new Neuron[99];
         public void Random(Neuron neuron)
         {
             neuron.mutation = r.Next(-100, 100);
@@ -569,7 +580,7 @@ namespace neural_network_app_wpf
             {
                 neurons[i] = new Neuron(diameter, length,numberOfItems,thingName,correctThings,correctAnswer);
                 neurons[i].NextAttempt();
-                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i+1 });                                              
+                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i+1, IdCorrect = neurons[i].skipAttempCounter });                                              
             }
             NeuronSelect.Visibility = Visibility.Collapsed;
             MultiNeuronsGrid.Visibility=Visibility.Visible;
@@ -581,10 +592,9 @@ namespace neural_network_app_wpf
             for (int i = 0; i < NumberOfNeurons; i++)
             {
                 neurons[i].NextAttempt();
-                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1 });
+                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1, IdCorrect = neurons[i].skipAttempCounter });
             }
         }
-        int b;        
         private void NeuronsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView btn = (ListView)sender;
@@ -599,5 +609,28 @@ namespace neural_network_app_wpf
                 SelectedNeuronAttemp.ItemsSource = neurons[b].neuronList;
             }
         }        
+
+        private void MultiNeuronSkip_Click(object sender, RoutedEventArgs e)
+        {            
+            int correctId=0;
+            do
+            {
+                for (int i = 0; i < NumberOfNeurons; i++)
+                {
+                    neurons[i].NextAttempt();
+                    if (neurons[i].neuronCorrect)
+                    {
+                        MultiNeuronsCorrect = true;
+                        correctId = i;
+                    }
+                }               
+            } while (!MultiNeuronsCorrect);
+            NeuronsList.Items.Clear();
+            for(int i=0; i < NumberOfNeurons; i++)
+            {
+                NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1, IdCorrect = neurons[i].skipAttempCounter });
+            }
+            Alert2.Text = "Neuron " + (correctId+1).ToString() + " is correct at " + neurons[correctId].skipAttempCounter + " attemp";
+        }
     }
 }

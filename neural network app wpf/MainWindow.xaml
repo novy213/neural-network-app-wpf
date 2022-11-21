@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:neural_network_app_wpf"
         mc:Ignorable="d"
         x:Name="Window"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1400">
     <Window.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -152,8 +152,8 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="Insert values" FontSize="50" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial Rounded MT Bold"/>
             <TextBox PreviewTextInput="numberOfItemsXAML_PreviewTextInput" FontSize="14" Style="{DynamicResource TextBoxStyle1}" x:Name="DiameterXAML" VerticalAlignment="Center" Grid.Row="1" Width="200" Padding="10 13" HorizontalAlignment="Right" Margin="10"/>
-            <TextBlock x:Name="CurrentValues" FontSize="12" FontWeight="Bold" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock x:Name="RemaningValues" FontSize="12" FontWeight="Bold" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock x:Name="CurrentValues" FontSize="12" Margin="100 0" FontWeight="Bold" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock x:Name="RemaningValues" FontSize="12" Margin="100 0" FontWeight="Bold" Grid.Row="2" Grid.Column="1" HorizontalAlignment="left" VerticalAlignment="Center"/>
             <TextBox PreviewTextInput="numberOfItemsXAML_PreviewTextInput" FontSize="14" Style="{DynamicResource TextBoxStyle1}" x:Name="LengthXAML" Grid.Row="2" Width="200" VerticalAlignment="Center" Padding="10 13" HorizontalAlignment="Right" Margin="10"/>
             <Button IsDefault="True" Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Add" Grid.ColumnSpan="2" Grid.Row="3" Width="80" Height="35" HorizontalAlignment="Center" Margin="5" Click="InsertValueAdd"/>
             <Button Background="#F5D6A6" VerticalAlignment="Top" FontSize="16" Style="{DynamicResource ButtonStyle1}" Content="Back" Grid.Column="1" Grid.Row="4" Width="120" Height="40" HorizontalAlignment="Left" Margin="10" Click="InsertValueBack_click"/>
@@ -258,22 +258,23 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Choose how many neurons you want to use" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="24" FontFamily="Arial Rounded MT Bold"/>
-            <Button Content="Single neuron" FontSize="18" Grid.Row="1" Width="160" Height="50" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" Click="SingleNeuron_click"/>
-            <Button Content="Multi neurons" FontSize="18" Grid.Row="1" Grid.Column="1" Width="160" Height="50" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" Click="MultiNeurons_click"/>
-            <Button Content="Ok" Visibility="Collapsed" x:Name="ApplyNumberOfNeurons" FontSize="18" Grid.Row="2" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" Click="ApplyNumberOfNeurons_Click"/>
+            <Button Content="Single neuron" HorizontalAlignment="Right" Margin="20 0" FontSize="18" Grid.Row="1" Width="160" Height="50" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" Click="SingleNeuron_click"/>
+            <Button Content="Multi neurons" HorizontalAlignment="Left" Margin="20 0" FontSize="18" Grid.Row="1" Grid.Column="1" Width="160" Height="50" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" Click="MultiNeurons_click"/>
+            <Button Content="Ok" Visibility="Collapsed" HorizontalAlignment="Left" Margin="120 0" x:Name="ApplyNumberOfNeurons" FontSize="18" Grid.Row="2" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" Click="ApplyNumberOfNeurons_Click"/>
             <TextBox FontSize="16" Visibility="Collapsed" Style="{DynamicResource TextBoxStyle1}" x:Name="numberOfNeurons" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" Width="200" Padding="10 13" PreviewTextInput="numberOfItemsXAML_PreviewTextInput"/>
         </Grid>
         <Grid x:Name="MultiNeuronsGrid" Visibility="Collapsed">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <ListView x:Name="NeuronsList" Grid.RowSpan="3" Margin="10" SelectionChanged="NeuronsList_SelectionChanged">
+            <ListView x:Name="NeuronsList" Grid.RowSpan="4" Margin="10" SelectionChanged="NeuronsList_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Id" Width="40" DisplayMemberBinding="{Binding Id}"/>
@@ -299,6 +300,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
+                        <GridViewColumn Header="Attemp" Width="70" DisplayMemberBinding="{Binding IdCorrect}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -332,12 +334,13 @@
                         </GridViewColumn>
                         <GridViewColumn Header="Diameter" DisplayMemberBinding="{Binding Diameter}"/>
                         <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Length}"/>
-                        <GridViewColumn Header="Test" DisplayMemberBinding="{Binding Weigth}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
             <Button Content="Finish" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" VerticalAlignment="Center" FontSize="16" Click="MainGridStop_click"/>
-            <Button Content="Next" IsDefault="True" Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click"/>
+            <Button Content="Next" IsDefault="True" Grid.Row="2" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click"/>
+            <Button Content="Skip"  Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronSkip_Click"/>
+            <TextBlock x:Name="Alert2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" FontWeight="Bold" Foreground="Green"/>
         </Grid>
     </Grid>
 </Window>
