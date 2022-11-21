@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace neural_network_app_wpf
@@ -263,8 +262,7 @@ namespace neural_network_app_wpf
             MultiNeuronsGrid.Visibility = Visibility.Collapsed;
             numberOfNeurons.Visibility = Visibility.Collapsed;
             ApplyNumberOfNeurons.Visibility = Visibility.Collapsed;
-            NeuronsList.Items.Clear();
-            SelectedNeuronAttemp.Items.Clear();
+            NeuronsList.Items.Clear();            
             mutation = r.Next(-100, 100);
             weights[0] = r.Next(-100, 100);
             weights[1] = r.Next(-100, 100);
@@ -491,13 +489,7 @@ namespace neural_network_app_wpf
                 idWrongCounter = 0;
                 correctCounter = 0;
             }           
-        }
-        public void Random(Neuron neuron)
-        {
-            neuron.mutation = r.Next(-100, 100);
-            neuron.weights[0] = r.Next(-100, 100);
-            neuron.weights[1] = r.Next(-100, 100);
-        }
+        }        
         public class NeuronList
         {
             public int Id { get; set; }
@@ -562,8 +554,7 @@ namespace neural_network_app_wpf
                 Alert1.Text = "No value was given";
             }
             attempCounter++;
-        }
-        int clickCounter=0;
+        }        
         private void MultiNeurons_click(object sender, RoutedEventArgs e)
         {
             numberOfNeurons.Visibility = Visibility.Visible;
@@ -575,6 +566,7 @@ namespace neural_network_app_wpf
 
         private void ApplyNumberOfNeurons_Click(object sender, RoutedEventArgs e)
         {
+            int correctId = 0;
             NumberOfNeurons = int.Parse(numberOfNeurons.Text);
             if (NumberOfNeurons > 100)
             {
@@ -590,14 +582,19 @@ namespace neural_network_app_wpf
                     neurons[i] = new Neuron(diameter, length, numberOfItems, thingName, correctThings, correctAnswer);
                     neurons[i].NextAttempt();
                     NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1, IdCorrect = neurons[i].skipAttempCounter });
+                    if (neurons[i].neuronCorrect)
+                    {
+                        MultiNeuronsCorrect = true;
+                        correctId = i;
+                    }
                 }
+                Alert2.Text = "Neuron " + (correctId + 1).ToString() + " is correct at " + neurons[correctId].skipAttempCounter + " attemp";
                 NeuronSelect.Visibility = Visibility.Collapsed;
                 MultiNeuronsGrid.Visibility = Visibility.Visible;
             }
         }      
         private void MultiNeuronNext_click(object sender, RoutedEventArgs e)
-        {                      
-            clickCounter++;                 
+        {                                                  
             NeuronsList.Items.Clear();            
             for (int i = 0; i < NumberOfNeurons; i++)
             {
