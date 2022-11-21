@@ -336,8 +336,8 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Content="Next" Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click" MouseDown="Button_MouseDown"/>
-            <TextBlock x:Name="test" Grid.Column="1"/>
+            <Button Content="Finish" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" VerticalAlignment="Center" FontSize="16" Click="MainGridStop_click"/>
+            <Button Content="Next" IsDefault="True" Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click"/>
         </Grid>
     </Grid>
 </Window>
