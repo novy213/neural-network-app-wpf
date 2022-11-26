@@ -290,10 +290,11 @@ namespace neural_network_app_wpf
             allCorrect = false;
             idWrong = 0;
             idWrongCounter = 0;            
-            for(int i = 0; i < 99;i++)
+            for(int i = 0; i < 100;i++)
             {
                 neurons[i] = null;
             }
+            Alert2 = null;
         }
         
         public static double WeightChange(int correctThing, double arm, double learningRate, double weigth)
@@ -586,9 +587,9 @@ namespace neural_network_app_wpf
                     {
                         MultiNeuronsCorrect = true;
                         correctId = i;
+                        Alert2.Text = "Neuron " + (correctId + 1).ToString() + " is correct at " + neurons[correctId].skipAttempCounter + " attemp";
                     }
-                }
-                Alert2.Text = "Neuron " + (correctId + 1).ToString() + " is correct at " + neurons[correctId].skipAttempCounter + " attemp";
+                }                
                 NeuronSelect.Visibility = Visibility.Collapsed;
                 MultiNeuronsGrid.Visibility = Visibility.Visible;
             }
@@ -638,6 +639,29 @@ namespace neural_network_app_wpf
                 NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1, IdCorrect = neurons[i].skipAttempCounter });
             }
             Alert2.Text = "Neuron " + (correctId+1).ToString() + " is correct at " + neurons[correctId].skipAttempCounter + " attemp";
+        }
+
+        private void MultiNeuronSkipAll_click(object sender, RoutedEventArgs e)
+        {
+            int numberOfCorrectNeurons = 0;
+            do
+            {
+                NeuronsList.Items.Clear();
+                numberOfCorrectNeurons = 0;
+                for(int i = 0; i < NumberOfNeurons; i++)
+                {
+                    neurons[i].NextAttempt();
+                    NeuronsList.Items.Add(new NeuronList { Correct = neurons[i].neuronCorrect, Id = i + 1, IdCorrect = neurons[i].skipAttempCounter });
+                }
+                for(int i = 0; i < NumberOfNeurons; i++)
+                {
+                    if (neurons[i].neuronCorrect)
+                    {
+                        numberOfCorrectNeurons++;
+                    }
+                }
+            }while(numberOfCorrectNeurons!=NumberOfNeurons);
+            Alert2.Text = "All neurons are correct";
         }
     }
 }

@@ -343,7 +343,8 @@
             </ListView>
             <Button Content="Finish" Grid.Column="1" Width="120" Height="40" Style="{DynamicResource ButtonStyle1}" Background="#F5D6A6" VerticalAlignment="Center" FontSize="16" Click="MainGridStop_click"/>
             <Button Content="Next" IsDefault="True" Grid.Row="2" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronNext_click"/>
-            <Button Content="Skip"  Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" Click="MultiNeuronSkip_Click"/>
+            <Button Content="Skip"  Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" HorizontalAlignment="Left" Margin="200 0" Click="MultiNeuronSkip_Click"/>
+            <Button Content="Skip all"  Grid.Row="1" Grid.Column="1" Width="120" Height="40" Style="{StaticResource ButtonStyle1}" Background="#F5D6A6" FontSize="16" HorizontalAlignment="Right" Margin="200 0" Click="MultiNeuronSkipAll_click"/>
             <TextBlock x:Name="Alert2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" FontWeight="Bold" Foreground="Green"/>
         </Grid>
     </Grid>
