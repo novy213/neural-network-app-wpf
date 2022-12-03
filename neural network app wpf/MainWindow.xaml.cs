@@ -17,18 +17,18 @@ namespace neural_network_app_wpf
         int remainingValue;
         int numberOfItems;
 
-        int[] correctAnswer = new int[100];
-        bool[] correct = new bool[100];
+        int[] correctAnswer = new int[1000];
+        bool[] correct = new bool[1000];
         int NumberOfNeurons = 10;
-        double[] result = new double[100];
-        int[] correctThings = new int[100];
-        string[] thingName = new string[100];
-        string[] computerThingName = new string[100];
+        double[] result = new double[1000];
+        int[] correctThings = new int[1000];
+        string[] thingName = new string[1000];
+        string[] computerThingName = new string[1000];
         bool allCorrect = false;
         int correctCounter = 0;
 
-        int[] diameter = new int[100];
-        int[] length = new int[100];
+        int[] diameter = new int[1000];
+        int[] length = new int[1000];
         int idWrong = 0;
         double learningRate = 0.2;       
        
@@ -65,7 +65,7 @@ namespace neural_network_app_wpf
         {
             if (numberOfItemsXAML.Text.Length > 0)
             {
-                if (int.Parse(numberOfItemsXAML.Text) <= 100)
+                if (int.Parse(numberOfItemsXAML.Text) < 1000)
                 {                    
                     ItemsCountGrid.Visibility = Visibility.Collapsed;
                     InsertValues.Visibility = Visibility.Visible;
@@ -77,8 +77,8 @@ namespace neural_network_app_wpf
                 }
                 else
                 {
-                    Alert.Text = "The maximum number of items is 100";
-                    numberOfItemsXAML.Text = "100";
+                    Alert.Text = "The maximum number of items is 999";
+                    numberOfItemsXAML.Text = "999";
                 }
             }
             else
@@ -376,18 +376,18 @@ namespace neural_network_app_wpf
 
             public int numberOfItems;           
 
-            public int[] correctAnswer = new int[100];
-            public bool[] correct = new bool[100];
+            public int[] correctAnswer = new int[1000];
+            public bool[] correct = new bool[1000];
             public int NumberOfNeurons = 10;
-            public double[] result = new double[100];
-            public int[] correctThings = new int[100];
-            public string[] thingName = new string[100];
-            public string[] computerThingName = new string[100];
+            public double[] result = new double[1000];
+            public int[] correctThings = new int[1000];
+            public string[] thingName = new string[1000];
+            public string[] computerThingName = new string[1000];
             public bool allCorrect = false;
             public int correctCounter = 0;
 
-            public int[] diameter = new int[100];
-            public int[] length = new int[100];
+            public int[] diameter = new int[1000];
+            public int[] length = new int[1000];
             public int idWrong = 0;
             public double learningRate = 0.2;
 
@@ -619,7 +619,7 @@ namespace neural_network_app_wpf
         }        
 
         private void MultiNeuronSkip_Click(object sender, RoutedEventArgs e)
-        {            
+        {           
             int correctId=0;
             do
             {
@@ -662,6 +662,36 @@ namespace neural_network_app_wpf
                 }
             }while(numberOfCorrectNeurons!=NumberOfNeurons);
             Alert2.Text = "All neurons are correct";
+        }
+
+        private void RandomValues_click(object sender, RoutedEventArgs e)
+        {
+            for(int i=0;i<numberOfItems;i++)
+            {
+                
+                diameter[i] = r.Next(0, 1000);
+                length[i] = r.Next(0, 1000);
+                if (length[i] > diameter[i])
+                {
+                    correctAnswer[i] = 2;
+                }
+                else if (length[i] < diameter[i])
+                {
+                    correctAnswer[i] = 1;
+                }
+                if (correctAnswer[i] == 1)
+                {
+                    thingName[i] = "Ring";
+                    correctThings[i] = 1;
+                }
+                else if (correctAnswer[i] == 2)
+                {
+                    thingName[i] = "Pen";
+                    correctThings[i] = -1;
+                }
+            }
+            InsertValues.Visibility = Visibility.Collapsed;
+            NeuronSelect.Visibility = Visibility.Visible;
         }
     }
 }
